@@ -1,14 +1,11 @@
-package org.nlb.springboot03.service.model;
+package org.nlb.springboot03.controller.viewObject;
 
-public class userModel {
+public class userViewModel {
     private int id;
     private String name;
     private byte gender;
     private Integer age;
     private String telephone;
-    private String registerMode;
-    private String thirdId;
-    private String password;
 
     public int getId() {
         return id;
@@ -48,29 +45,5 @@ public class userModel {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public String getRegisterMode() {
-        return registerMode;
-    }
-
-    public void setRegisterMode(String registerMode) {
-        this.registerMode = registerMode;
-    }
-
-    public String getThirdId() {
-        return thirdId;
-    }
-
-    public void setThirdId(String thirdId) {
-        this.thirdId = thirdId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
