@@ -1,7 +1,10 @@
 package org.nlb.springboot03.service.serviceImpl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.nlb.springboot03.dao.userMapper;
 import org.nlb.springboot03.dao.user_passwordMapper;
+import org.nlb.springboot03.error.ExceptionMessage;
+import org.nlb.springboot03.error.enumError;
 import org.nlb.springboot03.object.user;
 import org.nlb.springboot03.object.user_password;
 import org.nlb.springboot03.service.model.userModel;
@@ -25,6 +28,17 @@ public class userServiceImpl implements userService {
         user_password user_password=user_passwordMapper.selectById(i);
          userModel userModel=conveterUserModel(user,user_password);
         return userModel;
+    }
+
+    @Override
+    public void register(userModel userModel) throws ExceptionMessage {
+        if(userModel==null){
+            throw new ExceptionMessage(enumError.USER_NOT_EXIST);
+        }if(StringUtils.isEmpty(userModel.getName())||StringUtils.isEmpty(userModel.getTelephone())||
+        userModel.getGender()==0||userModel.getAge()==null){
+            throw new ExceptionMessage(enumError.PARAMETERS);
+        }user user = new user();
+
     }
 
     private userModel conveterUserModel(user user, user_password user_password){

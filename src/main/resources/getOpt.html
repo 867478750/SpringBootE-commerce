@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="static/js/jquery-1.11.2.min.js" type="javascript"></script>
+    <link href="static/js/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="static/js/component.css" rel="stylesheet" type="text/css"/>
+    <link href="static/js/login.css" rel="stylesheet" type="text/css"/>
+</head>
+<body class="login" background="backgroud">
+    <div >
+        <h3 class="form-title">获取opt信息</h3>
+        <div class="form-group">
+            <input type="text" placeholder="cellPhone" name="telephone" id="telephone" class="control-label">
+        </div>
+        <div class="form-actions">
+            <button type="submit" id="optButton" name="optButton" class="btnBlue">
+                获取opt短信
+            </button>
+        </div>
+    </div>
+
+</body>
+<script>
+    jQuery(document).ready(function () {
+        $("#optButton").on("click",function () {
+            $.ajax({
+                type:"post",
+                url:"http:localhost:8080/user/userOpt",
+                data:{
+                    "phoneNumber":$("#telephone").val(),
+                },
+                contentType:"application/x-www-form-urlencoded",
+                success:function (data) {
+                    if(data.status == "fail"){
+                        alert("发送失败，原因为")
+                    }
+                    if(data.status == "success"){
+                        alert("发送成功，注意查收"+data.data)
+                    }
+                },
+                fail:function (data) {
+                  alert("错误 ！")
+                }
+            });
+        })
+    })
+
+</script>
+</html>

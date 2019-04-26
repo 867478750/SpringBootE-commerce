@@ -1,9 +1,9 @@
 package org.nlb.springboot03.error;
 
 public enum enumError implements comError {
-    //通用错误类型
-    PARAMETER(00001,"参数不合法"),
-    USER_NOT_EXIST(10001,"用户不存在")
+    UNKNOW_ERROR(10002,"未知的错误"),
+    PARAMETERS(10001,"参数不合法"),
+    USER_NOT_EXIST(20001,"用户不存在")
 ;
     private int errorCode;
     private String errorMessage;

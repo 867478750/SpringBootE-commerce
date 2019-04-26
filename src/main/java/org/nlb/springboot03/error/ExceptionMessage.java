@@ -9,7 +9,7 @@ public class ExceptionMessage extends Exception implements comError {
     public ExceptionMessage(comError comError,String errorMessage){
         super();
         this.comError=comError;
-        comError.setErrorMessage(errorMessage);
+        this.comError.setErrorMessage(errorMessage);
     }
     @Override
     public int getErrorCode() {
