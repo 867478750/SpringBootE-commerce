@@ -26,10 +26,9 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="org.nlb.springboot03.dao"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
-        <table tableName="user_info" domainObjectName="user" enableCountByExample="false" enableDeleteByExample="false"
-               enableDeleteByName="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
-        <table tableName="user_password" domainObjectName="user_password" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByName="false" enableSelectByExample="false"
-               enableDeleteByExample="false"></table>
+        <table tableName="user_info" domainObjectName="user" ></table>
+        <table tableName="user_password" domainObjectName="user_password"></table>
+        <table tableName="sales_table" domainObjectName="sales" ></table>
+        <table tableName="storage_table" domainObjectName="storage" ></table>
     </context>
 </generatorConfiguration>

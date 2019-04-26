@@ -23,8 +23,8 @@ import java.util.Random;
 @Controller
 @RequestMapping("/user")
 @CrossOrigin(allowedHeaders = "*",allowCredentials = "true")
-public class userController extends baseController{
-    //extends baseController
+public class userController extends baseController {
+    //
     @Autowired
     private userServiceImpl userService;
     @Autowired

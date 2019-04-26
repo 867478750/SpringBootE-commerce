@@ -9,11 +9,15 @@ import org.nlb.springboot03.object.user;
 import org.nlb.springboot03.object.user_password;
 import org.nlb.springboot03.service.model.userModel;
 import org.nlb.springboot03.service.userService;
+import org.nlb.springboot03.validata.validataImpl;
+import org.nlb.springboot03.validata.validataResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.Validation;
 
 @Service
 public class userServiceImpl implements userService {
@@ -21,35 +25,43 @@ public class userServiceImpl implements userService {
     userMapper usermapper;
     @Autowired
     user_passwordMapper user_passwordMapper;
+    @Autowired
+    validataImpl validator;
+
     @Override
     public userModel getid(int i) {
-        user user= usermapper.selectByPrimaryKey(i);
-        if(user==null){
+        user user = usermapper.selectByPrimaryKey(i);
+        if (user == null) {
             return null;
         }
-        user_password user_password=user_passwordMapper.selectById(i);
-         userModel userModel=conveterUserModel(user,user_password);
+        user_password user_password = user_passwordMapper.selectById(i);
+        userModel userModel = conveterUserModel(user, user_password);
         return userModel;
     }
 
     @Override
     @Transactional
     public void register(userModel userModel) throws ExceptionMessage {
-        if(userModel==null){
+        if (userModel == null) {
             throw new ExceptionMessage(enumError.USER_NOT_EXIST);
-        }if(StringUtils.isEmpty(userModel.getName())||StringUtils.isEmpty(userModel.getTelephone())||
-        userModel.getGender()==0||userModel.getAge()==null){
-            throw new ExceptionMessage(enumError.PARAMETERS);
+        }
+//        }if(StringUtils.isEmpty(userModel.getName())||StringUtils.isEmpty(userModel.getTelephone())||
+//        userModel.getGender()==0||userModel.getAge()==null){
+//            throw new ExceptionMessage(enumError.PARAMETERS);
+//        }
+        validataResult result = validator.validate(userModel);
+        if (result.isHasError()) {
+            throw new ExceptionMessage(enumError.PARAMETERS, result.getErrorMessage());
         }
         user user = conveterUser(userModel);
         try {
             usermapper.insertSelective(user);
-        }catch (DuplicateKeyException ex){
-            throw new ExceptionMessage(enumError.DUPLICATE_PHONENUMBER,"手机号重复");
+        } catch (DuplicateKeyException ex) {
+            throw new ExceptionMessage(enumError.DUPLICATE_PHONENUMBER, "手机号重复");
         }
 
         int id = usermapper.selectFromTelephone(user.getTelephone());
-        user_password user_password =conveterPassword(userModel,id);
+        user_password user_password = conveterPassword(userModel, id);
         user_passwordMapper.insertSelective(user_password);
 
     }

@@ -1,13 +1,24 @@
 package org.nlb.springboot03.service.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class userModel {
     private int id;
+    @NotBlank(message = "用户名不能为空")
     private String name;
     private byte gender;
+    @NotNull
+    @Max(value = 150,message = "不能超150岁")
+    @Min(value = 0,message = "最小为0岁")
     private Integer age;
+    @NotBlank(message = "手机号不能为空")
     private String telephone;
     private String registerMode;
     private String thirdId;
+    @NotBlank(message = "密码不能为空")
     private String password;
 
     public int getId() {
