@@ -20,6 +20,8 @@ public interface user_passwordMapper {
 
     user_password selectByPrimaryKey(Integer id);
 
+
+
     user_password selectById(@Param(value="userId") Integer userId);
 
     int updateByExampleSelective(@Param("record") user_password record, @Param("example") user_passwordExample example);

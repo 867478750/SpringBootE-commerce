@@ -17,6 +17,10 @@ public interface userMapper {
 
     int insertSelective(user record);
 
+    int selectFromTelephone(String telephone);
+
+    user selectFromTelephone2(String telephone);
+
     List<user> selectByExample(userExample example);
 
     user selectByPrimaryKey(Integer id);

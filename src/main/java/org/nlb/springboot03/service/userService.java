@@ -7,4 +7,6 @@ public interface userService {
     userModel getid(int i);
 
     void register(userModel userModel) throws ExceptionMessage;
+
+    userModel validateService(String str,String EncoderNumber) throws ExceptionMessage;
 }

@@ -4,7 +4,7 @@ public class responseResult {
     private String status;
     private Object data;
     public static responseResult create(Object result){
-        return responseResult.create(result,"sucess");
+        return responseResult.create(result,"success");
     }
     public static responseResult create(Object result,String status){
         responseResult result1 =  new responseResult();

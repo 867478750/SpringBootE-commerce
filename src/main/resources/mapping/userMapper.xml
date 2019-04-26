@@ -101,6 +101,26 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
+  <select id="selectFromTelephone" parameterType="String" resultType="int">
+    select
+    id
+    from user_info
+    <if test="_parameter != null">
+      where telephone=#{telephone}
+    </if>
+  </select>
+
+
+  <select id="selectFromTelephone2" parameterType="String" resultType="org.nlb.springboot03.object.user">
+    select
+    <include refid="Base_Column_List" />
+    from user_info
+    <if test="_parameter != null">
+      where telephone=#{telephone}
+    </if>
+  </select>
+
   <insert id="insert" parameterType="org.nlb.springboot03.object.user">
     insert into user_info (id, name, gender, 
       age, telephone, register_mode, 

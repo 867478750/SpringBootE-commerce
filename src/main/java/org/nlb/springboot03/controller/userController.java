@@ -1,6 +1,7 @@
 package org.nlb.springboot03.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.nlb.springboot03.controller.viewObject.userViewModel;
 import org.nlb.springboot03.error.ExceptionMessage;
 import org.nlb.springboot03.error.enumError;
@@ -9,19 +10,21 @@ import org.nlb.springboot03.service.model.userModel;
 import org.nlb.springboot03.service.serviceImpl.userServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Random;
 
 @Controller
 @RequestMapping("/user")
-@CrossOrigin
+@CrossOrigin(allowedHeaders = "*",allowCredentials = "true")
 public class userController extends baseController{
+    //extends baseController
     @Autowired
     private userServiceImpl userService;
     @Autowired
@@ -29,10 +32,30 @@ public class userController extends baseController{
 
     public static final String contentType= "application/x-www-form-urlencoded";
 
-
-    @RequestMapping("/get")
+//登陆
+    @RequestMapping("/login")
     @ResponseBody
-    public responseResult getUser(@RequestParam("id") Integer id) throws ExceptionMessage {
+    public responseResult registerUser(@RequestParam("phoneNumber") String phoneNumber,
+                                       @RequestParam("password") String password) throws ExceptionMessage, UnsupportedEncodingException, NoSuchAlgorithmException {
+        if(StringUtils.isEmpty(password)||phoneNumber==null){
+            throw new ExceptionMessage(enumError.ERROR,"账号密码错误");
+        }else{
+            userModel userModel = this.validate(phoneNumber,password);
+            this.httpServletRequest.getSession().setAttribute("login","true");
+            this.httpServletRequest.getSession().setAttribute("userModel","true");
+            System.out.println(userModel);
+            return responseResult.create("success");
+        }
+    }
+
+    public userModel validate(String str,String number) throws UnsupportedEncodingException, NoSuchAlgorithmException, ExceptionMessage {
+        String EncoderNumber = this.MD5Conveter(number);
+        return userService.validateService(str,EncoderNumber);
+    }
+
+    @RequestMapping(value = "/getId",method = RequestMethod.POST,consumes = {contentType})
+    @ResponseBody
+    public responseResult getUser(@RequestParam("getId") Integer id) throws ExceptionMessage {
         userModel userModel=userService.getid(id);
         userViewModel user= converterViewModel(userModel);
         //
@@ -51,25 +74,43 @@ public class userController extends baseController{
             }
         }
     //用户注册
+    @RequestMapping(value = "/register",method = RequestMethod.POST,consumes = {contentType})
+    @ResponseBody
     public responseResult register(@RequestParam("name") String name,
                                    @RequestParam("age") Integer age,
                                    @RequestParam("gender") byte gender,
                                    @RequestParam("telephone") String telephone,
                                    @RequestParam("registerMode") String registerMode,
-                                   @RequestParam("thirdId")String thirdId,
-                                   @RequestParam("optCode") String optCode) throws ExceptionMessage {
+                                   @RequestParam("optCode") String optCode,
+                                   @RequestParam("password") String password) throws ExceptionMessage, NoSuchAlgorithmException, UnsupportedEncodingException {
         String oriOptCode = (String)this.httpServletRequest.getSession().getAttribute(telephone);
         if(!StringUtils.equals(optCode,oriOptCode)){
             throw new ExceptionMessage(enumError.PARAMETERS,"opt不符合");
         }else{
-            return null;
+            userModel userModel = new userModel();
+            userModel.setPassword(this.MD5Conveter(password));
+            userModel.setAge(age);
+            userModel.setGender(gender);
+            userModel.setName(name);
+            userModel.setThirdId("byPhone");
+            userModel.setTelephone(telephone);
+            userModel.setRegisterMode(registerMode);
+            userService.register(userModel);
+            return responseResult.create("success");
         }
+    }
+
+    //MD5
+    public static String MD5Conveter(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        Base64.Encoder base64Encoder = Base64.getEncoder();
+        return base64Encoder.encodeToString(md5.digest(str.getBytes("utf-8")));
     }
 
 
 
     //opt短信
-    @RequestMapping(value = "/userOpt",method = RequestMethod.POST,consumes = {contentType})
+    @RequestMapping(value = "/userOtp",method = RequestMethod.POST,consumes = {contentType})
     @ResponseBody
     public responseResult optPhone(@RequestParam("phoneNumber")String telephone){
         //生成opt验证码

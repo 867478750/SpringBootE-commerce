@@ -22,6 +22,20 @@ public class userModel {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "userModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", telephone='" + telephone + '\'' +
+                ", registerMode='" + registerMode + '\'' +
+                ", thirdId='" + thirdId + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
     public void setName(String name) {
         this.name = name;
     }
