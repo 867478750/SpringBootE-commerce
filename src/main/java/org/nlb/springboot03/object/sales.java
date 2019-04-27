@@ -1,5 +1,6 @@
 package org.nlb.springboot03.object;
 
+
 import java.math.BigDecimal;
 
 public class sales {
